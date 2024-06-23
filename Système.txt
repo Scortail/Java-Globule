@@ -1,0 +1,7 @@
+Système
+
+Taux d'oxygenation (globule rouge remplisse de 1%)
+Des ressources creation de globules consomme des ressources et tuer des bacterie ou virus donne des ressources
+
+
+chaque cellule a unne;ethode work ou do job
