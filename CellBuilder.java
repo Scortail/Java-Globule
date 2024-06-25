@@ -6,7 +6,7 @@ public abstract class CellBuilder {
         return cell;
     }
 
-    public abstract void createNewCell();
+    public abstract void createNewCell(int position);
 
     public abstract void addMembrane();
 

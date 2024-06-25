@@ -1,9 +1,8 @@
-
 public class TCellBuilder extends CellBuilder {
 
     @Override
-    public void createNewCell() {
-        cell = new TCell();
+    public void createNewCell(int position) {
+        cell = new TCell(position);
     }
 
     @Override
@@ -20,5 +19,4 @@ public class TCellBuilder extends CellBuilder {
     public void addCytoplasm() {
         cell.addPart("Cytoplasme");
     }
-
 }

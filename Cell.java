@@ -1,10 +1,9 @@
 import java.util.ArrayList;
 
-public abstract class Cell {
+public abstract class Cell extends Entite {
     private ArrayList<String> parts;
-    protected int position;
+
     boolean alive;
-    protected final int MAX_POSITION = 100;
 
     public Cell() {
         this.parts = new ArrayList<>();

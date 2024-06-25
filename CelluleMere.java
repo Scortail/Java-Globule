@@ -10,8 +10,8 @@ public class CelluleMere {
         return cellBuilder.getCell();
     }
 
-    public void buildCell() {
-        cellBuilder.createNewCell();
+    public void buildCell(int position) {
+        cellBuilder.createNewCell(position);
         cellBuilder.addCytoplasm();
         cellBuilder.addNucleus();
         cellBuilder.addMembrane();

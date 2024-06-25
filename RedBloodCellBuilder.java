@@ -1,8 +1,8 @@
 public class RedBloodCellBuilder extends CellBuilder {
 
     @Override
-    public void createNewCell() {
-        cell = new RedBloodCell();
+    public void createNewCell(int position) {
+        cell = new RedBloodCell(position);
     }
 
     @Override

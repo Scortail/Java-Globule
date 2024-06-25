@@ -2,6 +2,10 @@ public class RedBloodCell extends Cell {
 
     private boolean oxygen;
 
+    public RedBloodCell(int position) {
+        this.position = position;
+    }
+
     public void takeOxygen() {
         if (position == 0) {
             oxygen = true;

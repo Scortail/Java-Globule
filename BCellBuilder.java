@@ -2,8 +2,8 @@
 public class BCellBuilder extends CellBuilder {
 
     @Override
-    public void createNewCell() {
-        cell = new BCell();
+    public void createNewCell(int position) {
+        cell = new BCell(position);
     }
 
     @Override

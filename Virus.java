@@ -1,5 +1,5 @@
 
-public class Virus {
+public class Virus extends Entite {
 
     public Virus() {
 
