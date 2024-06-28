@@ -1,7 +1,6 @@
 package com.projet;
 
 import javafx.application.Application;
-
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -10,8 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import com.projet.RedCell.RedBloodCell;
 import com.projet.WhiteCell.BCell;
@@ -19,47 +18,47 @@ import com.projet.WhiteCell.TCell;
 import com.projet.pathogene.Bacteria;
 import com.projet.pathogene.Virus;
 
-/**
- * JavaFX App
- */
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 public class App extends Application {
 
     private SystemSanguain system;
+    private Text statsContent; // Pour mettre à jour les statistiques dynamiquement
 
     @Override
     public void start(Stage stage) {
-        // Initialisation du système
         system = new SystemSanguain();
         system.startSystem();
 
-        // Layout principal
         BorderPane root = new BorderPane();
-
-        // Grille pour les entités
         GridPane grid = new GridPane();
         setupGrid(grid);
 
-        // Configuration des boutons
         HBox buttonBox = setupButtons();
-
-        // Panneau pour les statistiques
         VBox statsBox = setupStatsPanel();
 
-        // Assemblage de la scène
         root.setBottom(buttonBox);
         root.setCenter(grid);
         root.setRight(statsBox);
+
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Système Sanguin Interactif");
         stage.setScene(scene);
         stage.show();
 
-        // Mise à jour régulière de la grille
-        updateGrid(grid);
+        // Timeline pour la mise à jour régulière
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> {
+            updateGrid(grid);
+            updateStats();
+        }));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     private HBox setupButtons() {
-        HBox buttonBox = new HBox(10); // Espacement entre les boutons
+        HBox buttonBox = new HBox(10);
         Button btnAddTCell = new Button("Add T-Cell");
         Button btnAddBCell = new Button("Add B-Cell");
         Button btnAddRedCell = new Button("Add Red Cell");
@@ -71,28 +70,34 @@ public class App extends Application {
     }
 
     private VBox setupStatsPanel() {
-        VBox statsBox = new VBox(5); // Espacement entre les éléments de stats
+        VBox statsBox = new VBox(10);
         Text statsTitle = new Text("Statistiques du Système:");
-        Text statsContent = new Text(system.makeReport()); // Ajoutez ici les statistiques mises à jour
+        statsContent = new Text(); // Texte pour afficher les statistiques mises à jour
         statsBox.getChildren().addAll(statsTitle, statsContent);
         return statsBox;
     }
 
     private void setupGrid(GridPane grid) {
+        grid.setGridLinesVisible(true); // Pour visualiser la grille si nécessaire
         for (int i = 0; i <= SystemSanguain.getMaxPosition(); i++) {
-            Circle circle = new Circle(5, Color.TRANSPARENT); // Utilisez TRANSPARENT pour voir les grilles
-            grid.add(circle, i, 0); // Une seule ligne pour simplifier
+            Circle circle = new Circle(5, Color.TRANSPARENT);
+            grid.add(circle, i, 0); // Ajoute un cercle pour chaque position possible
         }
     }
 
     private void updateGrid(GridPane grid) {
-        grid.getChildren().clear(); // Nettoyez le grid pour éviter les doublons
-        setupGrid(grid); // Réinitialisez les emplacements avec des cercles transparents
+        grid.getChildren().clear();
+        setupGrid(grid);
         for (Entite entite : system.getSang()) {
             Circle circle = new Circle(5, getColorForEntite(entite));
             GridPane.setConstraints(circle, entite.getPosition(), 0);
             grid.getChildren().add(circle);
         }
+    }
+
+    private void updateStats() {
+        String report = system.makeReport(); // Méthode hypothétique retournant une string
+        statsContent.setText(report); // Mise à jour du texte des statistiques
     }
 
     private Color getColorForEntite(Entite entite) {
@@ -107,20 +112,10 @@ public class App extends Application {
         } else if (entite instanceof Bacteria) {
             return Color.BROWN;
         }
-        return Color.TRANSPARENT; // Default, pour éviter d'obscurcir le grid
+        return Color.TRANSPARENT; // Par défaut
     }
 
     public static void main(String[] args) {
         launch(args);
-
-        // SystemSanguain system = new SystemSanguain();
-
-        // // Démarrage du système pour exécuter les actions périodiques
-        // system.startSystem();
-
-        // // Création et lancement de l'interface utilisateur
-        // UserInterface ui = new UserInterface(system);
-        // ui.displayMenu();
     }
-
 }
