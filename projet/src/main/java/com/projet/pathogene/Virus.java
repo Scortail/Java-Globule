@@ -9,8 +9,13 @@ public class Virus extends Entite {
     public Virus(int position, SystemSanguain system) {
         this.position = position;
         this.system = system;
-        this.position = position;
         etat = new NormalStateVirus(this);
+    }
+
+    public Virus(int position, SystemSanguain system, String dead) {
+        this.position = position;
+        this.system = system;
+        etat = new DeadState(this);
     }
 
     public String getNom() {

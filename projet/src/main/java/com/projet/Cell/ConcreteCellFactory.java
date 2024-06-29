@@ -6,7 +6,6 @@ import com.projet.RedCell.*;
 
 public class ConcreteCellFactory implements CellFactory {
     private CelluleMere celluleMere;
-    protected final int MAX_POSITION = 100;
     protected SystemSanguain system;
 
     public ConcreteCellFactory(SystemSanguain system) {
@@ -17,14 +16,14 @@ public class ConcreteCellFactory implements CellFactory {
     @Override
     public TCell createTCell() {
         celluleMere.setCellBuilder(new TCellBuilder());
-        celluleMere.buildCell(MAX_POSITION / 2, system);
+        celluleMere.buildCell(SystemSanguain.getMaxPosition() / 2, system);
         return (TCell) celluleMere.getCell();
     }
 
     @Override
     public BCell createBCell() {
         celluleMere.setCellBuilder(new BCellBuilder());
-        celluleMere.buildCell(MAX_POSITION / 2, system);
+        celluleMere.buildCell(SystemSanguain.getMaxPosition() / 2, system);
         return (BCell) celluleMere.getCell();
     }
 

@@ -20,7 +20,7 @@ public class SystemSanguain {
 
     private ArrayList<Entite> sang = new ArrayList<Entite>();
     private ConcreteCellFactory cellFactory = new ConcreteCellFactory(this);
-    private int oxygenation;
+    private float oxygenation;
     private int ressources;
     private static final int MAX_POSITION = 100;
     private Random random = new Random();
@@ -31,6 +31,30 @@ public class SystemSanguain {
         oxygenation = 100;
         ressources = 100;
         scheduler = Executors.newScheduledThreadPool(1);
+    }
+
+    public void initSystem() {
+        initCells(TCell.class, 10); // Initialiser 10 TCells
+        initCells(BCell.class, 10); // Initialiser 10 BCells
+        initCells(RedBloodCell.class, 10); // Initialiser 10 Red Blo
+    }
+
+    private void initCells(Class<? extends Cell> cellType, int count) {
+        for (int i = 0; i < count; i++) {
+            int position = random.nextInt(MAX_POSITION);
+            Cell cell;
+            if (cellType.equals(TCell.class)) {
+                cell = cellFactory.createTCell();
+            } else if (cellType.equals(BCell.class)) {
+                cell = cellFactory.createBCell();
+            } else if (cellType.equals(RedBloodCell.class)) {
+                cell = cellFactory.createRedBloodCell();
+            } else {
+                continue; // Si le type de cellule n'est pas reconnu, continuez la boucle
+            }
+            cell.setPosition(position);
+            sang.add(cell);
+        }
     }
 
     public void afficherSystem() {
@@ -48,7 +72,7 @@ public class SystemSanguain {
         System.out.println(affichage);
     }
 
-    public int getOxygenation() {
+    public float getOxygenation() {
         return oxygenation;
     }
 
@@ -145,13 +169,14 @@ public class SystemSanguain {
                 countBCells++;
             } else if (entite instanceof RedBloodCell) {
                 countRedBloodCells++;
-            } else if (entite instanceof Bacteria) { // Assuming you have a Bacteria class
+            } else if (entite instanceof Bacteria) {
                 countBacteria++;
-            } else if (entite instanceof Virus) { // Assuming you have a Virus class
+            } else if (entite instanceof Virus) {
                 countViruses++;
             }
         }
-
+        report += "Taux d'oxygenation : " + oxygenation + "\n";
+        report += "Ressources disponibles : " + ressources + "\n";
         report += "Nombre de T-Cells: " + countTCells + "\n";
         report += "Nombre de B-Cells: " + countBCells + "\n";
         report += "Nombre de Red Blood Cells: " + countRedBloodCells + "\n";
@@ -161,30 +186,65 @@ public class SystemSanguain {
     }
 
     public void generateRandomPathogens() {
-        int numberOfPathogens = random.nextInt(10) + 1;
-
-        for (int i = 0; i < numberOfPathogens; i++) {
+        if (random.nextInt(10) == 1) {
             int position = random.nextInt(MAX_POSITION);
-            if (random.nextBoolean()) {
-                addEntite(new Virus(position, this));
-            } else {
-                addEntite(new Bacteria(position, this));
+            addEntite(new Virus(position, this));
+        }
+
+        if (random.nextInt(10) == 1) {
+            int position = random.nextInt(MAX_POSITION);
+            addEntite(new Bacteria(position, this));
+        }
+    }
+
+    public void phagocythose() {
+        for (Entite entite : sang) {
+            if (entite.getEtat().getNom() == "Dead") {
+                sang.remove(entite);
+                ressources += 10;
             }
         }
     }
 
     private void executeActions() {
-        System.out.println("action");
         try {
             turnCounter++;
+            oxygenation -= 0.1;
             if (turnCounter % 3 == 0) {
                 generateRandomPathogens();
+            }
+            if (turnCounter % 5 == 0) {
+                phagocythose();
             }
             for (Entite entite : sang) {
                 entite.action();
             }
+            verifierOxygenationEtArreterJeu();
         } catch (Exception e) {
             System.out.println("Erreur lors de l'exécution des actions: " + e.getMessage());
+        }
+    }
+
+    public void ajouterOxygen(int nb) {
+        if (oxygenation + nb > 100) {
+            oxygenation = 100;
+        } else {
+            oxygenation += nb;
+        }
+    }
+
+    public void retirerOxygen(int nb) {
+        if (oxygenation - nb < 0) {
+            oxygenation = 0;
+        } else {
+            oxygenation -= nb;
+        }
+    }
+
+    private void verifierOxygenationEtArreterJeu() {
+        if (oxygenation < 50) {
+            stopSystem();
+            System.out.println("Vous avez perdu, l'oxygénation est tombée en dessous de 50.");
         }
     }
 
@@ -192,7 +252,7 @@ public class SystemSanguain {
         if (scheduler == null || scheduler.isShutdown()) {
             scheduler = Executors.newScheduledThreadPool(1);
         }
-        scheduler.scheduleAtFixedRate(this::executeActions, 0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(this::executeActions, 0, 1, TimeUnit.SECONDS);
     }
 
     public void stopSystem() {

@@ -14,7 +14,7 @@ public class NormalStateBCell extends StateEntite {
     @Override
     public void action() {
         for (Entite entite : bCell.getSystem().findAllEntite(bCell.getPosition())) {
-            if ((entite.getNom() == "RedCell" || entite.getNom() == "BCell")
+            if ((entite.getNom() == "Bacteria")
                     && entite.getEtat().getNom() != "Dead") {
                 bCell.kill(entite);
                 return;

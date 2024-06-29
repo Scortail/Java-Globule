@@ -1,5 +1,6 @@
 package com.projet.RedCell;
 
+import com.projet.DeadState;
 import com.projet.SystemSanguain;
 import com.projet.Cell.Cell;
 
@@ -12,6 +13,14 @@ public class RedBloodCell extends Cell {
         this.system = system;
         this.position = position;
         etat = new NormalRedBloodCellState(this);
+    }
+
+    public RedBloodCell(int position, SystemSanguain system, String dead) {
+        this.position = position;
+        this.system = system;
+        this.position = position;
+        etat = new DeadState(this);
+        ;
     }
 
     public boolean isOxygen() {
@@ -28,10 +37,10 @@ public class RedBloodCell extends Cell {
         }
     }
 
-    // Ajouter l'oxygen au system
     public void giveOxygen() {
         if (position == MAX_POSITION) {
             oxygen = false;
+            system.ajouterOxygen(5);
         }
     }
 

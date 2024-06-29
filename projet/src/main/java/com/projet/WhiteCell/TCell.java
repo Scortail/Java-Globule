@@ -13,6 +13,13 @@ public class TCell extends WhiteBloodCell {
         etat = new NormalStateTCell(this);
     }
 
+    public TCell(int position, SystemSanguain system, String dead) {
+        this.position = position;
+        this.system = system;
+        this.position = position;
+        etat = new DeadState(this);;
+    }
+
     public String getNom() {
         return "TCell";
     }

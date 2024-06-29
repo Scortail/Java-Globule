@@ -12,6 +12,12 @@ public class Bacteria extends Entite {
         etat = new NormalStateBacteria(this);
     }
 
+    public Bacteria(int position, SystemSanguain system, String dead) {
+        this.position = position;
+        this.system = system;
+        etat = new DeadState(this);
+    }
+
     public String getNom() {
         return "Bacteria";
     }

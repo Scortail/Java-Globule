@@ -13,6 +13,13 @@ public class BCell extends WhiteBloodCell {
         etat = new NormalStateBCell(this);
     }
 
+    public BCell(int position, SystemSanguain system, String dead) {
+        this.position = position;
+        this.system = system;
+        this.position = position;
+        etat = new DeadState(this);
+    }
+
     @Override
     public void action() {
         etat.action();
